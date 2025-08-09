@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import {API_BASE_URL} from "../config.js"
 import { AuthContext } from "../context/AuthContext";
 import { useLoading } from "../context/LoadingContext";
 
@@ -40,7 +41,7 @@ const Signup = () => {
         return;
       }
 
-      const res = await axios.post("/api/auth/register", formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, formData, {
         withCredentials: true,
       });
 
@@ -67,7 +68,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        "/api/auth/loginOtp",
+        `${API_BASE_URL}/api/auth/loginOtp`,
         { email: formData.email },
         { withCredentials: true }
       );
@@ -86,7 +87,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const res = await axios.post("/api/auth/checkOtp", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/checkOtp`, {
         email: formData.email,
         otp: formData.otp.trim(),
       });

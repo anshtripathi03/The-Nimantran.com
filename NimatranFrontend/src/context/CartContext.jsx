@@ -1,7 +1,7 @@
 // context/C
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
-
+import {API_BASE_URL} from "../config.js"
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
   const fetchCartItems = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get("/api/cart");
+      const res = await axios.get(`${API_BASE_URL}/api/cart`);
       if (Array.isArray(res.data?.data)) {
         setCartItems(res.data.data);
         setTotalAmount(calculateTotal(res.data.data));
@@ -49,7 +49,7 @@ export const CartProvider = ({ children }) => {
   // Add item to cart
   const addToCart = useCallback(async (productId, quantity = 1) => {
     try {
-      const res = await axios.post("/api/cart/add", { productId, quantity });
+      const res = await axios.post(`${API_BASE_URL}/api/cart/add`, { productId, quantity });
       if (res.status === 200) {
         await fetchCartItems();
       }
@@ -61,7 +61,7 @@ export const CartProvider = ({ children }) => {
   // Remove item from cart
   const removeFromCart = useCallback(async (productId) => {
     try {
-      const res = await axios.delete(`/api/cart/remove/${productId}`);
+      const res = await axios.delete(`${API_BASE_URL}/api/cart/remove/${productId}`);
       if (res.status === 200) {
         await fetchCartItems();
       }
@@ -73,7 +73,7 @@ export const CartProvider = ({ children }) => {
   // Update quantity
   const updateQuantity = useCallback(async (productId, quantity) => {
     try {
-      const res = await axios.put(`/api/cart/update/${productId}`, { quantity });
+      const res = await axios.put(`${API_BASE_URL}/api/cart/update/${productId}`, { quantity });
       if (res.status === 200) {
         await fetchCartItems();
       }

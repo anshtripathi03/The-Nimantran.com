@@ -46,10 +46,7 @@ const router = createBrowserRouter(
       <Route path="signup" element={<Signup />} />
       <Route path="*" element={<NotFound />} />
     </Route>
-  ),
-  {
-    basename:"/TheNimantran.com"
-  }
+  )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(

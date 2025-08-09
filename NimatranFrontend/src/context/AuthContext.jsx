@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { useLoading } from "./LoadingContext";
 export const AuthContext = createContext();
+import {API_BASE_URL} from "../config.js"
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
 try {
   setLoading(true)
-  const res = await axios.post("/api/auth/me",{
+  const res = await axios.post(`${API_BASE_URL}/api/auth/me`,{
      withCredentials: true,
   });
   setShowLogin({login:false ,signup:false})

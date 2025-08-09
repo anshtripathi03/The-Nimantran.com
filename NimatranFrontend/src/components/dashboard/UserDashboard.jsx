@@ -4,6 +4,7 @@ import { PackageSearch, MapPin } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "../../context/LoadingContext";
+import { API_BASE_URL } from "../../config.js";
 
 const UserDashboard = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -14,7 +15,7 @@ const UserDashboard = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("/api/auth/logout", {}, { withCredentials: true });
+      await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, { withCredentials: true });
       setUser(null);
       navigate("/");
     } catch (error) {
@@ -29,7 +30,7 @@ const UserDashboard = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.get("/api/auth/sendOtp", { withCredentials: true });
+      const res = await axios.get(`${API_BASE_URL}/api/auth/sendOtp`, { withCredentials: true });
       if (res.data.success) {
         alert("OTP sent to your email!");
       } else {

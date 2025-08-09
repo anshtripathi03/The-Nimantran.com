@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useLoading } from "../context/LoadingContext";
-
+import {API_BASE_URL} from "../config.js"
 const Login = ({ onClose }) => {
   const [formData, setFormData] = useState({
     emailOrPhone: "",
@@ -55,7 +55,7 @@ const { showLogin, setUser, setShowLogin } = useContext(AuthContext);
     setError("");
     setLoading(true);
     try {
-      const res = await axios.post("/api/auth/login", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         email: formData.email,
         otp: formData.otp,
       });
@@ -79,7 +79,7 @@ const { showLogin, setUser, setShowLogin } = useContext(AuthContext);
     setError("");
     setLoading(true);
     try {
-      const res = await axios.post("/api/auth/login", formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, formData, {
         withCredentials: true,
       });
 

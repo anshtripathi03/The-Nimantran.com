@@ -3,12 +3,13 @@ import { useRef, useState ,useContext,useEffect,useCallback} from "react";
 import {Link} from "react-router-dom"
 import dummyCards from "../Data.jsx"
 import {CartContext} from "../context/CartContext";
+import {API_BASE_URL} from "../config.js"
 import axios from "axios"
 const CardDetail = () => {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const res = await axios.get("/api/product/fetchProduct");
+      const res = await axios.get(`${API_BASE_URL}/api/product/fetchProduct`);
       return res.data.data || [];
     } catch (error) {
       console.error("Issue while fetching products", error);

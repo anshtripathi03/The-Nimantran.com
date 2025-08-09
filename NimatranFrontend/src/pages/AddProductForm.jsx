@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import {API_BASE_URL} from "../config.js"
 const categories = ["marriage", "birthday", "festival", "baby-shower", "business"];
 
 const AddProductForm = () => {
@@ -64,7 +64,7 @@ const AddProductForm = () => {
     setMessage("");
 
     try {
-      const res = await axios.post("/api/admin/addProduct", formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/admin/addProduct`, formData, {
         withCredentials: true
       });
 

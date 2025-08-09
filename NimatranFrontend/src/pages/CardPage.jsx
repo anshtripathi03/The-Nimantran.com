@@ -2,6 +2,7 @@ import { useContext, useEffect, useState,useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Fuse from "fuse.js";
 import axios from "axios"
+import {API_BASE_URL} from "../config.js"
 import dummyCards from "../Data.jsx";
 import Card from "../components/Card";
 
@@ -18,7 +19,7 @@ const CardPage = ({category}) => {
   const cardsPerPage = 8;
   const fetchProducts = useCallback(async () => {
     try {
-      const res = await axios.get("/api/product/fetchProduct");
+      const res = await axios.get(`${API_BASE_URL}/api/product/fetchProduct`);
       return res.data.data || [];
     } catch (error) {
       console.error("Issue while fetching products", error);

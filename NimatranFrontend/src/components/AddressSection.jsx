@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config.js";
 
 const AddressSection = ({ selectedAddress, setSelectedAddress }) => {
   const [addresses, setAddresses] = useState([]);
@@ -18,7 +19,7 @@ const AddressSection = ({ selectedAddress, setSelectedAddress }) => {
 
   const fetchAddresses = async () => {
     try {
-      const res = await axios.get("/api/getAddresses", { withCredentials: true });
+      const res = await axios.get(`${API_BASE_URL}/api/getAddresses`, { withCredentials: true });
       const add = res.data.data.addresses;
       console.log(add);
       setAddresses(add.map(a => ({ ...a, id: a._id })));
@@ -35,7 +36,7 @@ const AddressSection = ({ selectedAddress, setSelectedAddress }) => {
     }
 
     try {
-      await axios.post("/api/addAddress", newAddress, { withCredentials: true });
+      await axios.post(`${API_BASE_URL}/api/addAddress`, newAddress, { withCredentials: true });
       setNewAddress({
         name: "",
         phone: "",
