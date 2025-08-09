@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-"postbuild": "cpy dist/index.html dist/404.html",
 
     "deploy": "gh-pages -d dist"
   },
