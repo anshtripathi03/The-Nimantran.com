@@ -13,7 +13,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'https://localhost:8080',
+        target: 'https://newlive.onrender.com',
         changeOrigin: true,
         secure: false,
       },
