@@ -13,7 +13,7 @@ const sslServer = https.createServer({
 
 
 app.use(cors({
-  origin: "https://newlive-222.onrender.com",
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
