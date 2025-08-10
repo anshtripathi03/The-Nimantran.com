@@ -8,7 +8,7 @@ import router from "./routes/user.routes.js";
 const app = express();
 
 // ===== CORS CONFIG =====
-const FRONTEND_URL = "https://newlive-12345.onrender.com";
+const FRONTEND_URL = "https://newlive-99.onrender.com";
 
 const corsOptions = {
   origin: FRONTEND_URL,
@@ -18,7 +18,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ Handle preflight requests explicitly
 
 // ===== BODY PARSER =====
 app.use(express.json({ limit: "16kb" }));
@@ -45,16 +44,6 @@ app.use((err, req, res, next) => {
 });
 
 // ===== HTTPS SERVER =====
-const sslServer = https.createServer(
-  {
-    key: fs.readFileSync("./ssl/key.pem"),
-    cert: fs.readFileSync("./ssl/cert.pem"),
-  },
-  app
-);
 
-sslServer.listen(5000, () => {
-  console.log("✅ HTTPS Server running on https://localhost:5000");
-});
 
 export default app;
