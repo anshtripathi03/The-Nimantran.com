@@ -21,15 +21,13 @@ return isOtpCorrect
 
 
 }
-
-
 const sendOTP = asyncHandler(async (req, res) => {
   const OTP_EXPIRY = 5 * 60; // 5 minutes
   const RATE_LIMIT = 100;      // Max 3 OTPs per hour
   const RESEND_LIMIT = 60;   // 1 minute cooldown
  console.log("I am the body",req.body)
   const email = req.body?.email || req.user?.email;
-  console.log(email)
+  // console.log(email)
   if (!email) {
     throw new ApiError(400, "Email is required");
   }
@@ -59,7 +57,7 @@ const sendOTP = asyncHandler(async (req, res) => {
   await redisClient.set(`otp:lastSent:${email}`, now.toString(), { ex: RESEND_LIMIT });
 
   // 6. Track OTP request count (increment + set expiry)
-  // await redisClient.incr(`otp:count:${email}`);
+  await redisClient.incr(`otp:count:${email}`);
   await redisClient.expire(`otp:count:${email}`, 10); // expire in 1 hour
 
   // 7. Send email

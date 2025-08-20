@@ -3,9 +3,9 @@ import mongoose, { Schema } from "mongoose";
 
 const cartItemSchema = new mongoose.Schema({
 
-productId:{
+cardId:{
   type:Schema.Types.ObjectId,
-  ref:"Product",
+  ref:"Card",
   required:true
 },
 quantity:{
@@ -23,7 +23,7 @@ const cartSchema = new mongoose.Schema({
   ref:"User",
   required:true
  },
- items:[cartItemSchema]
+ cards:[cartItemSchema]
 },{
   timestamps:true
 })

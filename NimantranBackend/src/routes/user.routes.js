@@ -1,48 +1,76 @@
 import { Router } from "express";
-import { getCurrentUser, loginUser, logoutUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
-import { verifyJWT } from "../middlewares/auth.middlerware.js";
+import {
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  registerUser,
+  updateProfile
+} from "../controllers/user.controller.js";
+
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import {
+  addToCart,
+ getCartCards,
+ removeCartCard,
+  updateCartCardQuantity,
+} from "../controllers/cart.controller.js";
+
+import {
+  createReview,
+  deleteReview,
+  updateReview
+} from "../controllers/review.controller.js";
+
 import { checkOtp, sendOTP } from "../controllers/verification.controller.js";
-import { addToCart, getCartItems, removeCartItem, totalCartAmount, updateCartItemQuantity } from "../controllers/cart.controller.js";
-import { addProduct, fetchProducts } from "../controllers/product.controller.js";
-import { addNewAdress, getAddresses } from "../controllers/address.controller.js";
+import {
+  cancelOrder,
+  createOrder,
+  getUserOrders
+} from "../controllers/order.controller.js";
 
-const  router = Router()
+import { getAllCards } from "../controllers/card.controller.js";
 
+const router = Router();
 
+/* ========================
+   AUTH ROUTES
+======================== */
+router.post("/auth/registerUser", registerUser);
+router.post("/auth/loginUser", loginUser);
+router.post("/auth/getLoginOtp", sendOTP);
+router.get("/auth/me", verifyJWT, getCurrentUser);
+router.post("/auth/logoutUser", verifyJWT, logoutUser);
+router.put("/auth/updateProfile", verifyJWT, updateProfile);
+router.post("/auth/checkOtp", checkOtp);
+router.get("/auth/sendOtp", verifyJWT, sendOTP);
+router.post("/token/refreshAccessToken", refreshAccessToken);
 
-console.log(registerUser)
-router.route("/auth/register").post(registerUser);
-router.route("/auth/login").post(loginUser)
-router.route("/auth/logout").post(verifyJWT,logoutUser)
-router.route("/auth/sendOtp").get(verifyJWT,sendOTP)
-router.route("/auth/loginOtp").post(sendOTP)
-router.route("/cart/add").post(verifyJWT,addToCart)
-router.route("/auth/refresh-token").post(refreshAccessToken)
-router.route("/auth/me").post(verifyJWT,getCurrentUser)
-router.route("/cart").get(verifyJWT,getCartItems)
-router.route("/admin/addProduct").post(addProduct)
-router.route("/product/fetchProduct").get(fetchProducts)
-router.route("/cart/remove/:productId").delete(verifyJWT,removeCartItem)
-router.route("/product/totalAmount").get(verifyJWT,totalCartAmount)
-router.route("/cart/update/:productId").put(verifyJWT,updateCartItemQuantity)
-router.route("/auth/checkOtp").post(checkOtp)
+/* ========================
+   CART ROUTES
+======================== */
+router.post("/cart/addToCart", verifyJWT, addToCart);
+router.get("/cart/getCartCards", verifyJWT,getCartCards);
+router.delete("/cart/removeCartCard/:cardId", verifyJWT,removeCartCard);
+router.put("/cart/updateCartCardQuantity/:cardId", verifyJWT, updateCartCardQuantity);
 
+/* ========================
+   REVIEW ROUTES
+======================== */
+router.post("/review/createReview", verifyJWT, createReview);
+router.put("/review/updateReview/:id", verifyJWT, updateReview);
+router.delete("/review/deleteReview/:id", verifyJWT, deleteReview);
 
+/* ========================
+   CARD ROUTES
+======================== */
+router.get("/card/getAllCards", getAllCards); // use query params for filters
 
-
-
-
-
-
-
-
-
-// Address routes
-
-router.route("/addAddress").post(verifyJWT,addNewAdress)
-router.route("/getAddresses").get(verifyJWT,getAddresses)
-
-
-
+/* ========================
+   ORDER ROUTES
+======================== */
+router.post("/order/createOrder", verifyJWT, createOrder);
+router.get("/order/getUserOrders", verifyJWT, getUserOrders);
+router.put("/order/cancelOrder/:id", verifyJWT, cancelOrder);
 
 export default router;

@@ -4,191 +4,98 @@ import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 
-
-
-const addNewAdress = asyncHandler(async(req,res)=>{
-
-
-const { name,phone,alternatePhone,state,city,roadAreaColony,pincode,landmark,typeOfAddress } = req.body
-const userId = req.user?._id
-
-
-
-
-
-
-if(!userId)
-{
-  throw new ApiError(400,"Please login first")
-}
-
-if( ['name','phone','state','city','roadAreaColony','pincode'].some((feild)=> (!feild || feild.trim() ===""))              )
-
-{
- throw new ApiError(400,"All necessary feilds are required")
-}
-
-if(! /^\d{6}$/.test(pincode))
-{  throw new ApiError(400,"Pincode is not valid")
-
-
-}
-if(! /^\d{10}$/.test(phone))
-{  throw new ApiError(400,"phone is not valid")
-
-
-}
-
-
-if(alternatePhone  &&  !/^\d{10}$/.test(alternatePhone))
-
-{
-
-
-throw new ApiError(400,"The phone number is not valid")
-
-}
-
-
-const userAddress = await Address.findOne({userId})
-
-if(userAddress)
-{
-
-  
-
-  userAddress.addresses.push({
-     name,
-   phone,
-   alternatePhone,
-   state,
-   city,
-   roadAreaColony,
-   pincode,
-   landmark,
-   typeOfAddress
-  })
-
-
-  userAddress.save()
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-const address = await Address.create(
-  
-{
-
-
-   userId,
-   addresses:[
-      {
-   name,
-   phone,
-   alternatePhone,
-   state,
-   city,
-   roadAreaColony,
-   pincode,
-   landmark,
-   typeOfAddress
-      }
-
-   ]
-
-
-
-
-
-
-}
-  
-  
-)
-
-
-
-if(!address)
-{
-
-  throw new ApiError(500,"Something went wrong while creating the address")
-
-
-}
-
-
-return res.status(202)
-.json(
-  new ApiResponse(200,address,"Address added successfully")
-)
-
-
-})
-const getAddresses = asyncHandler(async(req,res)=>{
-
-const userId = req.user?._id
-
-
-if(!userId)
-{
-  throw new ApiError(400,"Please login first")
-}
-
-
-
-
-const addresses = await Address.findOne({userId})
-
-
-
-
-
-
-if(!addresses)
-{
-  throw new ApiError(400,"No addresses has been found ")
-}
-
-return res.status(202)
-.json(
-  new ApiResponse(200,addresses,"Addresses fetched successfully")
-)
-
-
-
-
-
-
-
-
-
-
-})
-
-
-export {addNewAdress,getAddresses}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export const addAddress = asyncHandler(async (req, res) => {
+  const { name, phone, alternatePhone, state, city, roadAreaColony, pincode, landmark, typeOfAddress } = req.body;
+  const userId = req.user._id;
+
+  if (!name || !phone || !state || !city || !roadAreaColony || !pincode) {
+    throw new ApiError(400, "All required address fields must be provided");
+  }
+
+  let userAddressDoc = await Address.findOne({ userId });
+
+  const newAddress = {
+    name,
+    phone,
+    alternatePhone,
+    state,
+    city,
+    roadAreaColony,
+    pincode,
+    landmark,
+    typeOfAddress
+  };
+
+  if (!userAddressDoc) {
+    userAddressDoc = await Address.create({
+      userId,
+      addresses: [newAddress]
+    });
+  } else {
+    userAddressDoc.addresses.push(newAddress);
+    await userAddressDoc.save();
+  }
+
+  return res.status(201).json(new ApiResponse(201, userAddressDoc, "Address added successfully"));
+});
+
+
+export const getAllAddresses = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const addressDoc = await Address.findOne({ userId });
+  if (!addressDoc || addressDoc.addresses.length === 0) {
+    throw new ApiError(404, "No addresses found for this user");
+  }
+
+  return res.status(200).json(new ApiResponse(200, addressDoc.addresses, "Addresses fetched successfully"));
+});
+
+
+export const updateAddress = asyncHandler(async (req, res) => {
+  const { addressId } = req.params;
+  const userId = req.user._id;
+
+  const addressDoc = await Address.findOne({ userId });
+  if (!addressDoc) {
+    throw new ApiError(404, "No addresses found for this user");
+  }
+
+  const addressIndex = addressDoc.addresses.findIndex(addr => addr._id.toString() === addressId);
+  if (addressIndex === -1) {
+    throw new ApiError(404, "Address not found");
+  }
+
+  // Update only provided fields
+  Object.keys(req.body).forEach(key => {
+    if (req.body[key] !== undefined) {
+      addressDoc.addresses[addressIndex][key] = req.body[key];
+    }
+  });
+
+  await addressDoc.save();
+
+  return res.status(200).json(new ApiResponse(200, addressDoc.addresses[addressIndex], "Address updated successfully"));
+});
+
+
+export const deleteAddress = asyncHandler(async (req, res) => {
+  const { addressId } = req.params;
+  const userId = req.user._id;
+
+  const addressDoc = await Address.findOne({ userId });
+  if (!addressDoc) {
+    throw new ApiError(404, "No addresses found for this user");
+  }
+
+  const initialLength = addressDoc.addresses.length;
+  addressDoc.addresses = addressDoc.addresses.filter(addr => addr._id.toString() !== addressId);
+
+  if (addressDoc.addresses.length === initialLength) {
+    throw new ApiError(404, "Address not found");
+  }
+
+  await addressDoc.save();
+
+  return res.status(200).json(new ApiResponse(200, null, "Address deleted successfully"));
+});
