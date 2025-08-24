@@ -25,10 +25,12 @@ import BuyNowPage from "./pages/BuyNowPage";
 import CardForm from "./pages/CardForm.jsx";
 import DeliveryChecker from "./components/DeliveryChecker";
 import Business from "./pages/Business.jsx";
-
+import EcommerceUserDashboard from "./components/dashboard/userDashboard/user.jsx"
 // Import Admin Routes
 import AdminRoutes from "./admin/AdminRoutes"; 
 import store from "./redux/store.js";
+import UpdateUserInfo from "./components/dashboard/userDashboard/UpdateUserInfo.jsx";
+import DeliveryBoard from "./components/dashboard/userDashboard/deliverboard.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,7 +42,7 @@ const router = createBrowserRouter(
         <Route path="delivery-check" element={<DeliveryChecker />} />
         <Route path="business" element={<Business />} />
         <Route path="dashboard/wholeseller" element={<WholesalerDashboard />} />
-        <Route path="dashboard/user" element={<UserDashboard />} />
+        <Route path="dashboard/user" element={<EcommerceUserDashboard/>} />
         <Route path="category/:category" element={<CardPage />} />
         <Route path="search" element={<CardPage />} />
         <Route path="card/:id" element={<CardDetail />} />
@@ -49,6 +51,8 @@ const router = createBrowserRouter(
         <Route path="checkout" element={<Checkout />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="userdashboard/updateuserinfo" element={<UpdateUserInfo />} />
+        <Route path="/deliveryboard" element={<DeliveryBoard />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 

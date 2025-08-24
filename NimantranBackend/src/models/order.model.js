@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema(
     
     items: [
       {
-        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // for reference
+        cardId: { type: mongoose.Schema.Types.ObjectId, ref: "Card" }, 
         title: String,
         category: String,
         price: Number,

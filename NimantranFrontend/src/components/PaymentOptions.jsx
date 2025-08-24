@@ -16,7 +16,7 @@ const PaymentOptions = ({ paymentMethod, setPaymentMethod }) => {
 
       {/* Payment Method Selection */}
       <div className="grid md:grid-cols-2 gap-4 font-serif">
-        {["UPI", "Credit/Debit Card", "Net Banking"].map((method) => (
+        {["UPI", "Credit/Debit Card", "Net Banking","Cash On Delivery"].map((method) => (
           <label
             key={method}
             className={`border rounded-xl p-4 cursor-pointer transition-all shadow-sm ${

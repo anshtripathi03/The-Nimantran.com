@@ -235,14 +235,6 @@ export const applyWholesaler = async (req, res) => {
   res.status(201).json({ message: "Application submitted successfully.", application });
 };
 
-
-
-
-
-
-
-
-
 export {
   registerUser,
   loginUser,

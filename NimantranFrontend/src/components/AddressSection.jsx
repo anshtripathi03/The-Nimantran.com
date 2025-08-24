@@ -19,8 +19,9 @@ const AddressSection = ({ selectedAddress, setSelectedAddress }) => {
 
   const fetchAddresses = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/getAddresses`, { withCredentials: true });
-      const add = res.data.data.addresses;
+      const res = await axios.get(`${API_BASE_URL}/api/user/getAllAddresses`, { withCredentials: true });
+      console.log("Add is here",res)
+      const add = res.data.data;
       console.log(add);
       setAddresses(add.map(a => ({ ...a, id: a._id })));
     } catch (err) {
@@ -36,7 +37,7 @@ const AddressSection = ({ selectedAddress, setSelectedAddress }) => {
     }
 
     try {
-      await axios.post(`${API_BASE_URL}/api/addAddress`, newAddress, { withCredentials: true });
+      await axios.post(`${API_BASE_URL}/api/user/addAddress`, newAddress, { withCredentials: true });
       setNewAddress({
         name: "",
         phone: "",
@@ -48,6 +49,7 @@ const AddressSection = ({ selectedAddress, setSelectedAddress }) => {
         landmark: "",
         typeOfAddress: "",
       });
+      console.log("I am working res address")
       setShowForm(false);
       fetchAddresses();
     } catch (err) {

@@ -3,10 +3,11 @@ import ApiError from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import Order from "../models/order.model.js";
 import { v4 as uuidv4 } from "uuid"; // For unique order IDs
-
+import { Card } from "../models/card.model.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
+  
   const {
     items,
     totalAmount,
@@ -17,15 +18,32 @@ export const createOrder = asyncHandler(async (req, res) => {
     paymentMethod,
     shippingAddress
   } = req.body;
+  
 
   if (!items || items.length === 0) {
     throw new ApiError(400, "Order items are required");
   }
+const populatedItems = await Promise.all(
+  items.map(async (item) => {
+    const card = await Card.findById(item.cardId);
+    return {
+      cardId: card._id,
+      name: card.name,
+      category: card.category,
+      price: card.price,
+      discount: card.discount || 0,
+      quantity: item.quantity,
+      image: card.images.primaryImage,
+      color: card.color,
+      size: card.size
+    };
+  })
+);
 
   const order = await Order.create({
     orderId: uuidv4(),
     user: userId,
-    items,
+    items:populatedItems,
     totalAmount,
     discount,
     tax,
@@ -44,9 +62,9 @@ export const createOrder = asyncHandler(async (req, res) => {
 
 export const getUserOrders = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
-
+  console.log("I am working")
   const orders = await Order.find({ user: userId })
-    .populate("items.product", "title price")
+    .populate("items.cardId", "name price")
     .sort({ createdAt: -1 });
 
   return res

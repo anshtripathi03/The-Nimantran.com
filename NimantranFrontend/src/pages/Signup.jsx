@@ -65,7 +65,6 @@ const Signup = () => {
       setError("Please enter a valid email.");
       return;
     }
-
     try {
       const res = await axios.post(
         `${API_BASE_URL}/api/user/auth/getLoginOtp`,

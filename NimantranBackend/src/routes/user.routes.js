@@ -11,6 +11,7 @@ import {
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
   addToCart,
+ emptyCart,
  getCartCards,
  removeCartCard,
   updateCartCardQuantity,
@@ -30,6 +31,7 @@ import {
 } from "../controllers/order.controller.js";
 
 import { getAllCards } from "../controllers/card.controller.js";
+import { addAddress, getAllAddresses } from "../controllers/address.controller.js";
 
 const router = Router();
 
@@ -53,7 +55,7 @@ router.post("/cart/addToCart", verifyJWT, addToCart);
 router.get("/cart/getCartCards", verifyJWT,getCartCards);
 router.delete("/cart/removeCartCard/:cardId", verifyJWT,removeCartCard);
 router.put("/cart/updateCartCardQuantity/:cardId", verifyJWT, updateCartCardQuantity);
-
+router.delete("/cart/emptyCart",verifyJWT,emptyCart)
 /* ========================
    REVIEW ROUTES
 ======================== */
@@ -72,5 +74,16 @@ router.get("/card/getAllCards", getAllCards); // use query params for filters
 router.post("/order/createOrder", verifyJWT, createOrder);
 router.get("/order/getUserOrders", verifyJWT, getUserOrders);
 router.put("/order/cancelOrder/:id", verifyJWT, cancelOrder);
+
+
+
+// Address
+
+router.route("/addAddress").post(verifyJWT,addAddress)
+router.route("/getAllAddresses").get(verifyJWT,getAllAddresses)
+
+
+
+
 
 export default router;

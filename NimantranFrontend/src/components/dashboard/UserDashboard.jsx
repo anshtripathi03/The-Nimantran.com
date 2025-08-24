@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from "react";
+import React, { useContext, useCallback, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { PackageSearch, MapPin } from "lucide-react";
 import axios from "axios";
@@ -9,7 +9,11 @@ import { API_BASE_URL } from "../../config.js";
 const UserDashboard = () => {
   const { user, setUser } = useContext(AuthContext);
   const { setLoading } = useLoading();
+  const [order,setOrder] = useState([])
   const navigate = useNavigate();
+  
+   
+
 
   const notify = (message, type = "info") => {
     // In production, use toast notifications like react-toastify or shadcn/ui
@@ -57,6 +61,29 @@ const UserDashboard = () => {
       setLoading(false);
     }
   }, [setLoading]);
+  
+  const getAllUserOrders = async(e)=>{
+    try {
+       const res = await axios.get(`${API_BASE_URL}/api/user/order/getUserOrders`,{
+        withCredentials:true
+       })
+       setOrder(res.data.data)
+       console.log(order)
+
+       console.log("We have got the user orders",res)
+
+    } catch (error) {
+      
+    }
+
+  }
+
+  useEffect(()=>{
+    getAllUserOrders()
+  },[])
+
+
+
 
   const primaryAddress = user?.addresses?.[0];
 
@@ -143,9 +170,9 @@ const UserDashboard = () => {
           <PackageSearch className="text-yellow-600" />
           Order History
         </h3>
-        {user?.orderHistory?.length ? (
+        {order.length ? (
           <div className="ml-6 space-y-4">
-            {user.orderHistory.map((order) => (
+            {order.map((order) => (
               <div
                 key={order?.orderId}
                 className="border border-gray-200 p-4 rounded-lg bg-[#fdf9f3]"
@@ -163,7 +190,7 @@ const UserDashboard = () => {
                   <div className="mt-2">
                     <strong>Items:</strong>
                     <ul className="list-disc ml-6">
-                      {order.items.map((item, idx) => (
+                      {order?.items.map((item, idx) => (
                         <li key={idx}>
                           {item.title} (x{item.quantity}) - ₹{item.price}
                         </li>

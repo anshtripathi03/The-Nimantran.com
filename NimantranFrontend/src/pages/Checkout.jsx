@@ -4,11 +4,14 @@ import { useCart } from "../context/CartContext";
 import AddressSection from "../components/AddressSection";
 import PaymentOptions from "../components/PaymentOptions";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { API_BASE_URL } from "../config";
 function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {cartItems,totalAmount}  = useSelector((state)=>state.cart)
+  const {cartItems,totalAmount,discountAmount}  = useSelector((state)=>state.cart)
 
   const buyNowItem = location.state?.card;
   const itemsToCheckout = buyNowItem ? [buyNowItem] : cartItems;
@@ -24,18 +27,37 @@ function Checkout() {
     }
   }, [buyNowItem, cartItems, navigate]);
 
-  const handlePayment = () => {
-    if (!selectedAddress) {
+  const emptyCart = async()=>{
+    try {
+      const res = await axios.delete(`${API_BASE_URL}/api/user/cart/emptyCart`,{
+        withCredentials:true
+      })
+    } catch (error) {
+      console.log("Error has been occured while emptying the cart",error)
+    }
+  }
+
+  const handlePayment = async() => {
+
+    try {
+        if (!selectedAddress) {
       alert("Please select a delivery address.");
       return;
     }
 
-    alert(`Order placed using ${paymentMethod}!`);
-    if (!buyNowItem) {
-      clearCart();
+      const res = await axios.post(`${API_BASE_URL}/api/user/order/createOrder`,{ items:cartItems, totalAmount,discount:discountAmount,tax:34,shippingFee:54,finalAmount:totalAmount,paymentMethod:"COD",shippingAddress:selectedAddress  },{
+        withCredentials:true
+      })
+          console.log("I am the order",res)
+
+     emptyCart();
+      toast.success("YOUR ORDER HAS BEEN PLACED SUCCESSFULLY")
+    navigate("/cart");
+    } catch (error) {
+      console.log("Error has been happened",error)
     }
 
-    navigate("/");
+
   };
 
   return (

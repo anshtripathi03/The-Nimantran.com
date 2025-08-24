@@ -8,10 +8,10 @@ import allRouter from "./routes/index.js";
 const app = express();
 
 // ===== CORS CONFIG =====
-const FRONTEND_URL = "http://localhost:3000";
+const FRONTEND_URL = "http://localhost:3001";
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "http://localhost:3001",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
