@@ -11,6 +11,22 @@ export default function Account() {
   const [isWholesaler, setIsWholesaler] = useState(false)
   const navigate = useNavigate()
 
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:5000/auth/logoutUser", 
+        {}, 
+        { withCredentials: true } // ✅ important so cookies are sent
+      );
+
+      // Redirect after logout
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed, try again.");
+    }
+  };
+
   const getUserData = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/user/auth/me`, {
@@ -73,8 +89,11 @@ export default function Account() {
             <button className="px-4 mx-4 py-2 bg-gray-500 text-white rounded" onClick={() => {
               navigate("/userdashboard/updateuserinfo")
             }}>Edit</button>
-            <button className="px-4 mx-4 py-2 bg-primary text-white rounded">Save</button>
+            <button className="px-4 mx-4 py-2 bg-green-400 text-white rounded">Save</button>
           </div>
+        </div>
+        <div className='justify-self-center mt-12'>
+            <button onClick={handleLogout} className='bg-primary text-white rounded px-5 py-2'>Log Out</button>
         </div>
       </div>
       )}
